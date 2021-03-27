@@ -60,36 +60,39 @@ class DBconnect:
                     print('+ power/dosage (in mg) : ', i["power"])
 
                     print('\n*************************************************************\n')
-                    cur.execute("select * from medicine where name = '{}' ".format(name))
-                    result = cur.fetchone()
 
-                    ans = input("Please enter the name if you are willing to change, else ignore :")
-                    if len(ans) != 0:
-                        name = ans.lower()
-                        cur.execute("update medicine set name  = '{}' where name='{}' ".format(ans.lower(), name))
-                    self.con.commit()
 
-                    ans = input("Please enter the MFD if you are willing to change, else ignore :")
-                    if len(ans) != 0:
-                        cur.execute("update medicine set Mfd  = '{}' where name='{}' ".format(ans, name))
-                    self.con.commit()
 
-                    ans = input("Please enter the Price if you are willing to change, else ignore :")
-                    if len(ans) != 0:
-                        cur.execute("update medicine set price  = '{}' where name='{}' ".format(int(ans), name))
-                    self.con.commit()
+                cur.execute("select * from medicine where name = '{}' ".format(name))
+                result = cur.fetchone()
 
-                    ans = input("Please enter the no_of_strips if you are willing to change, else ignore :")
-                    if len(ans) != 0:
-                        cur.execute("update medicine set no_of_strips  = '{}' where name='{}' ".format(ans, name))
-                    self.con.commit()
+                ans = input("Please enter the name if you are willing to change, else ignore :")
+                if len(ans) != 0:
+                    name = ans.lower()
+                    cur.execute("update medicine set name  = '{}' where name='{}' ".format(ans.lower(), name))
+                self.con.commit()
 
-                    ans = input("Please enter the power/dosage (in mg) if you are willing to change, else ignore :")
-                    if len(ans) != 0:
-                        cur.execute("update medicine set power  = '{}' where name='{}' ".format(ans, name))
-                    self.con.commit()
+                ans = input("Please enter the MFD if you are willing to change, else ignore :")
+                if len(ans) != 0:
+                    cur.execute("update medicine set Mfd  = '{}' where name='{}' ".format(ans, name))
+                self.con.commit()
 
-                    return
+                ans = input("Please enter the Price if you are willing to change, else ignore :")
+                if len(ans) != 0:
+                    cur.execute("update medicine set price  = '{}' where name='{}' ".format(float(ans), name))
+                self.con.commit()
+
+                ans = input("Please enter the no_of_strips if you are willing to change, else ignore :")
+                if len(ans) != 0:
+                    cur.execute("update medicine set no_of_strips  = '{}' where name='{}' ".format(ans, name))
+                self.con.commit()
+
+                ans = input("Please enter the power/dosage (in mg) if you are willing to change, else ignore :")
+                if len(ans) != 0:
+                    cur.execute("update medicine set power  = '{}' where name='{}' ".format(ans, name))
+                self.con.commit()
+
+                return
 
 
     def delMedicine(self):
@@ -126,11 +129,29 @@ class DBconnect:
                     print('+ power/dosage (in mg) : ', i["power"])
 
                     print('\n*************************************************************\n')
-                    id = int(input("Select the medicine ID if you are tring to delete the record:"))
+            id = int(input("Select the medicine ID if you are tring to delete the record:"))
 
-                    cur.execute("delete from medicine where id='{}' ".format(id))
-                    self.con.commit()
+            sql = "select * from medicine where id = '{}' ".format(id)
+            cur.execute(sql)
+            results = cur.fetchall()
+
+            row_count = cur.rowcount
+
+            while row_count == 0:
+                print('\n*************************************************************')
+                print('               Oops You have selected an ID that is not valid  ')
+                print('*************************************************************\n')
+                id = int(input('               Enter the ID you are looking for... Enter 0 come back to menu  '))
+                if id == 0:
                     return
+                cur.execute("select * from medicine where id = '{}' ".format(id))
+
+                results = cur.fetchall()
+                row_count = cur.rowcount
+
+            cur.execute("delete from medicine where id='{}' ".format(id))
+            self.con.commit()
+            return
 
 
     def medicine(self):

@@ -46,7 +46,9 @@ class DBconnect:
                 print('               Select the Patient You are Searching for                ')
                 print('*************************************************************\n')
 
+
                 for i in results:
+
                     print('\n*************************************************************\n')
 
                     print('+ ID : ', i["id"])
@@ -61,17 +63,36 @@ class DBconnect:
                     print('+ Reason_For_Visiting : ', i["visiting_for"])
                     print('+ Amount_Paid_Till_Date:', i["total_amount_paid"])
                     print('\n*************************************************************\n')
-                    id = int(input("Select the Patient ID that you are searching for:"))
-                    cur.execute("select * from patient where id = '{}' ".format(id))
-                    result = cur.fetchone()
-                    no_of_times_visited = result['no_of_times_visited'] + 1
-                    visiting_for = result["visiting_for"] + ', ' + input("Enter the reason you are Visiting again : ")
+                id = int(input("Select the Patient ID that you are searching for:"))
+                #cur.execute("select * from patient where id = '{}' ".format(id))
+                sql = "select * from patient where id = '{}' ".format(id)
+                cur.execute(sql)
+                results = cur.fetchall()
 
-                    cur.execute(
+                row_count = cur.rowcount
+
+                while row_count==0:
+                    print('\n*************************************************************')
+                    print('               Oops You have selected an ID that is not valid  ')
+                    print('*************************************************************\n')
+                    id=int(input('               Enter the ID you are looking for... Enter 0 come back to menu  '))
+                    if id==0:
+                        return
+                    cur.execute("select * from patient where id = '{}' ".format(id))
+
+                    results = cur.fetchall()
+                    row_count = cur.rowcount
+
+                cur.execute("select * from patient where id = '{}' ".format(id))
+                result = cur.fetchone()
+                no_of_times_visited = result['no_of_times_visited'] + 1
+                visiting_for = result["visiting_for"] + ', ' + input("Enter the reason you are Visiting again : ")
+
+                cur.execute(
                         "update Patient set no_of_times_visited  = '{}' ,visiting_for = '{}' where id='{}' ".format(
                             no_of_times_visited, visiting_for, id))
-                    self.con.commit()
-                    return
+                self.con.commit()
+                return
 
 
     def UpdateCash(self):
@@ -110,15 +131,34 @@ class DBconnect:
                     print('+ Reason_For_Visiting : ', i["visiting_for"])
                     print('+ Amount_Paid_Till_Date:', i["total_amount_paid"])
                     print('\n*************************************************************\n')
-                    id = int(input("Select the Patient ID that you are searching for:"))
+                id = int(input("Select the Patient ID that you are searching for:"))
+                cur.execute("select * from patient where id = '{}' ".format(id))
+
+                row_count = cur.rowcount
+                results = cur.fetchall()
+
+                row_count = cur.rowcount
+
+                while row_count == 0:
+                    print('\n*************************************************************')
+                    print('               Oops You have selected an ID that is not valid  ')
+                    print('*************************************************************\n')
+                    id = int(input('               Enter the ID you are looking for... Enter 0 come back to menu  '))
+                    if id == 0:
+                        return
                     cur.execute("select * from patient where id = '{}' ".format(id))
-                    result = cur.fetchone()
-                    total_amount_paid =  result["total_amount_paid"] + int(input("Enter the amount: "))
-                    cur.execute(
+
+                    results = cur.fetchall()
+                    row_count = cur.rowcount
+
+                cur.execute("select * from patient where id = '{}' ".format(id))
+                result = cur.fetchone()
+                total_amount_paid =  result["total_amount_paid"] + int(input("Enter the amount: "))
+                cur.execute(
                         "update Patient set total_amount_paid  = '{}'  where id='{}' ".format(
                             total_amount_paid,  id))
-                    self.con.commit()
-                    return
+                self.con.commit()
+                return
 
 
     def patient(self):

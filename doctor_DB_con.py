@@ -65,30 +65,50 @@ class DBconnect:
                     print('+ salary : ', i["salary"])
                     print('+ available_time_duration:', i["available_time_duration"])
                     print('\n*************************************************************\n')
-                    id = int(input("Select the Doctor ID that you are searching for:"))
+
+
+                id = int(input("Select the Doctor ID that you are searching for:"))
+                cur.execute("select * from Doctor where id = '{}' ".format(id))
+
+                results = cur.fetchall()
+
+                row_count = cur.rowcount
+
+                while row_count == 0:
+                    print('\n*************************************************************')
+                    print('               Oops You have selected an ID that is not valid  ')
+                    print('*************************************************************\n')
+                    id = int(input('               Enter the ID you are looking for... Enter 0 come back to menu  '))
+                    if id == 0:
+                        return
                     cur.execute("select * from Doctor where id = '{}' ".format(id))
-                    result = cur.fetchone()
 
-                    ans = input("Please enter the Email ID if you are willing to change, else ignore :")
-                    if len(ans) != 0:
-                        cur.execute("update Doctor set email  = '{}' where id='{}' ".format(ans, id))
-                    self.con.commit()
+                    results = cur.fetchall()
+                    row_count = cur.rowcount
 
-                    ans = input("Please enter the Experience if you are willing to change, else ignore :")
-                    if len(ans) != 0:
-                        cur.execute("update Doctor set experience_in_years  = '{}' where id='{}' ".format(ans, id))
-                    self.con.commit()
+                cur.execute("select * from Doctor where id = '{}' ".format(id))
+                result = cur.fetchone()
 
-                    ans = input("Please enter the salary if you are willing to change, else ignore :")
-                    if len(ans) != 0:
-                        cur.execute("update Doctor set salary  = '{}' where id='{}' ".format(int(ans), id))
-                    self.con.commit()
+                ans = input("Please enter the Email ID if you are willing to change, else ignore :")
+                if len(ans) != 0:
+                    cur.execute("update Doctor set email  = '{}' where id='{}' ".format(ans, id))
+                self.con.commit()
 
-                    ans = input("Please enter the available time duration if you are willing to change, else ignore :")
-                    if len(ans) != 0:
-                        cur.execute("update Doctor set available_time_duration  = '{}' where id='{}' ".format(ans, id))
-                    self.con.commit()
-                    return
+                ans = input("Please enter the Experience if you are willing to change, else ignore :")
+                if len(ans) != 0:
+                    cur.execute("update Doctor set experience_in_years  = '{}' where id='{}' ".format(ans, id))
+                self.con.commit()
+
+                ans = input("Please enter the salary if you are willing to change, else ignore :")
+                if len(ans) != 0:
+                    cur.execute("update Doctor set salary  = '{}' where id='{}' ".format(int(ans), id))
+                self.con.commit()
+
+                ans = input("Please enter the available time duration if you are willing to change, else ignore :")
+                if len(ans) != 0:
+                    cur.execute("update Doctor set available_time_duration  = '{}' where id='{}' ".format(ans, id))
+                self.con.commit()
+                return
 
 
     def delDoctor(self):
@@ -127,11 +147,32 @@ class DBconnect:
                     print('+ salary : ', i["salary"])
                     print('+ available_time_duration:', i["available_time_duration"])
                     print('\n*************************************************************\n')
-                    id = int(input("Select the Doctor ID that you are searching for:"))
+                id = int(input("Select the Doctor ID that you are searching for:"))
 
-                    cur.execute("delete from doctor where id='{}' ".format(id))
-                    self.con.commit()
-                    return
+
+                sql = "select * from Doctor where id = '{}' ".format(id)
+                cur.execute(sql)
+                results = cur.fetchall()
+
+                row_count = cur.rowcount
+
+                while row_count==0:
+                    print('\n*************************************************************')
+                    print('               Oops You have selected an ID that is not valid  ')
+                    print('*************************************************************\n')
+                    id=int(input('               Enter the ID you are looking for... Enter 0 come back to menu  '))
+                    if id==0:
+                        return
+                    cur.execute("select * from Doctor where id = '{}' ".format(id))
+
+                    results = cur.fetchall()
+                    row_count = cur.rowcount
+
+
+
+                cur.execute("delete from doctor where id='{}' ".format(id))
+                self.con.commit()
+                return
 
 
     def doctor(self):
